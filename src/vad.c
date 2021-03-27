@@ -54,11 +54,12 @@ Features compute_features(const float *x, int N) {
  * TODO: Init the values of vad_data
  */
  
-VAD_DATA * vad_open(float rate, float alfa0, float alfa1) {
+VAD_DATA * vad_open(float rate, float alfa0, float alfa1, float alfa2) {
   VAD_DATA *vad_data = malloc(sizeof(VAD_DATA));
   vad_data->state = ST_INIT;
   vad_data->alfa0 = alfa0;
   vad_data->alfa1 = alfa1;
+  vad_data->alfa2 = alfa2;
   vad_data->sampling_rate = rate;
   vad_data->frame_length = rate * FRAME_TIME * 1e-3;
   return vad_data;
@@ -97,15 +98,18 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
   case ST_INIT:
     vad_data->state = ST_SILENCE;
     vad_data->k0 = f.p + vad_data->alfa0;
+    vad_data->k1 = f.am + vad_data->alfa1;
+    vad_data->k2 = f.zcr + vad_data->alfa2;
+
     break;
  
   case ST_SILENCE:
-    if (f.p > vad_data->k0) //f.p indica la potencia de la trama
+    if ((f.p > vad_data->k0) && (f.am > vad_data->k1) && (f.zcr > vad_data->k2))
       vad_data->state = ST_VOICE;
     break;
  
   case ST_VOICE:
-    if (f.p < vad_data->k0)
+    if ((f.p < vad_data->k0) && (f.am < vad_data->k1) && (f.zcr < vad_data->k2))
       vad_data->state = ST_SILENCE;
     break;
  
