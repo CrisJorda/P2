@@ -1,5 +1,4 @@
-% File must be opened with MATLAB, and executed with the program inside the
-% directory \\wsl$\Ubuntu-20.04\home\user\PAV\P2\src
+% P
 
 clear all
 close all
