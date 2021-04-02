@@ -43,7 +43,6 @@ Features compute_features(const float *x, int N) {
    * For the moment, compute random value between 0 and 1 
    */
   Features feat;
-  //feat.zcr = feat.p = feat.am = (float) rand()/RAND_MAX; //indica que el paso x 0, la potencia y la amplitud son números aleatorios
   feat.zcr = compute_zcr(x, N, 16000);
   feat.p = compute_power(x, N);
   feat.am = compute_am(x, N);
@@ -54,14 +53,16 @@ Features compute_features(const float *x, int N) {
  * TODO: Init the values of vad_data
  */
  
-VAD_DATA * vad_open(float rate, float alfa0, float alfa1, float alfa2) {
+VAD_DATA * vad_open(float rate, float alfa0, float alfa1, float alfa2, float ftime) {
   VAD_DATA *vad_data = malloc(sizeof(VAD_DATA));
   vad_data->state = ST_INIT;
   vad_data->alfa0 = alfa0;
   vad_data->alfa1 = alfa1;
   vad_data->alfa2 = alfa2;
+  vad_data->ftime = ftime;
+  vad_data->k3 = FRAME_TIME + vad_data->ftime;
   vad_data->sampling_rate = rate;
-  vad_data->frame_length = rate * FRAME_TIME * 1e-3;
+  vad_data->frame_length = rate * vad_data->k3 * 1e-3;
   return vad_data;
 }
  
@@ -104,12 +105,12 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
     break;
  
   case ST_SILENCE:
-    if ((f.p > vad_data->k0) && (f.am > vad_data->k1) && (f.zcr > vad_data->k2))
+    if ((f.p > vad_data->k0) && (f.am > vad_data->k1) /*&& (f.zcr > vad_data->k2)*/)
       vad_data->state = ST_VOICE;
     break;
  
   case ST_VOICE:
-    if ((f.p < vad_data->k0) && (f.am < vad_data->k1) && (f.zcr < vad_data->k2))
+    if ((f.p < vad_data->k0) && (f.am < vad_data->k1) /*&& (f.zcr < vad_data->k2)*/)
       vad_data->state = ST_SILENCE;
     break;
  

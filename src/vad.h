@@ -13,7 +13,7 @@ const char *state2str(VAD_STATE st);
 
 typedef struct {
   VAD_STATE state;
-  float sampling_rate, k0, k1, k2, alfa0, alfa1, alfa2;
+  float sampling_rate, k0, k1, k2, k3, alfa0, alfa1, alfa2, ftime;
   unsigned int frame_length;
   float last_feature; /* for debuggin purposes */
 } VAD_DATA;
@@ -22,7 +22,7 @@ typedef struct {
    It should return allocated and initialized values of vad_data
 
    sampling_rate: ... the sampling rate */
-VAD_DATA *vad_open(float sampling_rate, float alfa0, float alfa1, float alfa2);
+VAD_DATA *vad_open(float sampling_rate, float alfa0, float alfa1, float alfa2, float ftime);
 
 /* vad works frame by frame.
    This function returns the frame size so that the program knows how

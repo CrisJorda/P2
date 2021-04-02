@@ -1,4 +1,5 @@
-% P
+% File must be opened with MATLAB, and executed with the program inside the
+% directory \\wsl$\Ubuntu-20.04\home\user\PAV\P2\src
 
 clear all
 close all
@@ -36,3 +37,19 @@ maxAlfa0
 maxAlfa1
 maxAlfa2
 maxResult
+
+% RECORDS
+%  4.75         -       -       => 88.931%
+%   -        0.0006     -       => 87.099%
+%   -           -     -350      => 40.651%
+%  4.75      0.0006   -350      => 80.928%
+%  4.75      0.0006     -       => 90.094%
+%   6        0.00045    -       => 90.465%
+%   8        0.0004     -       => 90.815%
+%   10       0.0002     -       => 91.318%
+%   9.25     0.0002     -       => 92.106% (FRAME_TIME = 40ms)
+
+% FROM THIS POINT: ALFA2 = FTIME
+%   9.50      0.00025    50      => 92.688% 
+%   9.00      0.00030    80      => 93.115% 
+%   8.75      0.0003750    80      => 93.115% 
