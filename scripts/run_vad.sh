@@ -7,36 +7,54 @@
 DB=~/PAV/P2/db.v4
 CMD=bin/vad
 
-touch results.txt
-rm results.txt
-touch temp.txt
+# touch results.txt
+# rm results.txt
+# touch temp.txt
+#
+# for alfa0 in $(seq 8.60 8.60); do
+#    for alfa1 in $(seq 0.0003950 0.0003950); do
+#        for ftime in $(seq 84 84); do
+#            for filewav in $DB/*/*wav; do
+#            #    echo
+#                echo "**************** $filewav ****************"
+#                if [[ ! -f $filewav ]]; then 
+#                    echo "Wav file not found: $filewav" >&2
+#                    exit 1
+#                fi
+#
+#                filevad=${filewav/.wav/.vad}
+#                $CMD -i $filewav -o $filevad -0 $alfa0 -1 $alfa1 -3 $ftime || exit 1
+#
+#            done
+#
+#            scripts/vad_evaluation.pl $DB/*/*lab | tee ~/PAV/P2/temp.txt
+#            echo "$alfa0 $alfa1 $ftime" >> results.txt
+#            tail -2 temp.txt >> results.txt
+#        done
+#    done
+#done
+#
+#rm temp.txt
+#exit 0
 
-for alfa0 in $(seq 8.60 8.60); do
-    for alfa1 in $(seq 0.0003950 0.0003950); do
-        for ftime in $(seq 84 84); do
-            for filewav in $DB/*/*wav; do
-            #    echo
-                echo "**************** $filewav ****************"
-                if [[ ! -f $filewav ]]; then 
-                    echo "Wav file not found: $filewav" >&2
-                    exit 1
-                fi
+for filewav in $DB/*/*wav; do
+#    echo
+    echo "**************** $filewav ****************"
+    if [[ ! -f $filewav ]]; then 
+	    echo "Wav file not found: $filewav" >&2
+	    exit 1
+    fi
 
-                filevad=${filewav/.wav/.vad}
-                $CMD -i $filewav -o $filevad -0 $alfa0 -1 $alfa1 -3 $ftime || exit 1
+    filevad=${filewav/.wav/.vad}
 
-            # Alternatively, uncomment to create output wave files
-            #    filewavOut=${filewav/.wav/.vad.wav}
-            #    $CMD $filewav $filevad $filewavOut || exit 1
+    $CMD -i $filewav -o $filevad || exit 1
 
-            done
+# Alternatively, uncomment to create output wave files
+#    filewavOut=${filewav/.wav/.vad.wav}
+#    $CMD $filewav $filevad $filewavOut || exit 1
 
-            scripts/vad_evaluation.pl $DB/*/*lab | tee ~/PAV/P2/temp.txt
-            echo "$alfa0 $alfa1 $ftime" >> results.txt
-            tail -2 temp.txt >> results.txt
-        done
-    done
 done
 
-rm temp.txt
+scripts/vad_evaluation.pl $DB/*/*lab
+
 exit 0
