@@ -185,8 +185,14 @@ Para finalizar, añadimos estos valores como opciones default del programa vad, 
 
 Analizando este sistema de optimización, habría sido muy interesante hacer una ejecución con los 4 parámetros y un gran abanico de posibles valores, pero el coste computacional habría sido demasiado alto.
 
+
+
 - Inserte una gráfica en la que se vea con claridad la señal temporal, el etiquetado manual y la detección
   automática conseguida para el fichero grabado al efecto. 
+
+Nuestra señal con los etiquetados queda como:
+
+<img src="img/our_vad.png" align="center">
 
 
 - Explique, si existen. las discrepancias entre el etiquetado manual y la detección automática.
