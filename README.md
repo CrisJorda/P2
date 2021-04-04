@@ -119,6 +119,7 @@ Ejercicios
 
 - Complete el código de los ficheros de la práctica para implementar un detector de actividad vocal tan
   exacto como sea posible. Tome como objetivo la maximización de la puntuación-F `TOTAL`.
+
 Con el objetivo de implementar un detector lo más plural y versátil posible, hemos decidido maximizar la puntuación-F total sobre la base de datos en vez de hacerlo sobre nuestra señal. En consecuencia, el resultado va a diferir bastante, como veremos a continuación.
 
 Los parámetros principales de la trama que son decisivos en la puntuación son:
@@ -130,6 +131,7 @@ Los parámetros principales de la trama que son decisivos en la puntuación son:
 Para maximizarla, tenemos que ir probando distintas combinaciones de estos valores e implementarlas en el programa vad.c de manera correcta.
 
 Para empezar, creamos las variables dentro de los códigos source y las asociamos a un parámetro de entrada del comando de ejecución de vad, como se nos indica en el anexo I. De esta manera, ofrecemos las siguientes opciones:
+<img src="img/vad_help.png" align="center">
 
 Dónde las opciones ‘-0’, ‘-1’, ‘-2’, ‘-3’, son las que hemos añadido. En los códigos figuran como:
 
