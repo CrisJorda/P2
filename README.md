@@ -119,6 +119,23 @@ Ejercicios
 
 - Complete el código de los ficheros de la práctica para implementar un detector de actividad vocal tan
   exacto como sea posible. Tome como objetivo la maximización de la puntuación-F `TOTAL`.
+Con el objetivo de implementar un detector lo más plural y versátil posible, hemos decidido maximizar la puntuación-F total sobre la base de datos en vez de hacerlo sobre nuestra señal. En consecuencia, el resultado va a diferir bastante, como veremos a continuación.
+
+Los parámetros principales de la trama que son decisivos en la puntuación son:
+- Su potencia en dB
+- Su amplitud media
+- Su zero crossing rate
+- Su duración en milisegundos
+
+Para maximizarla, tenemos que ir probando distintas combinaciones de estos valores e implementarlas en el programa vad.c de manera correcta.
+
+Para empezar, creamos las variables dentro de los códigos source y las asociamos a un parámetro de entrada del comando de ejecución de vad, como se nos indica en el anexo I. De esta manera, ofrecemos las siguientes opciones:
+
+Dónde las opciones ‘-0’, ‘-1’, ‘-2’, ‘-3’, son las que hemos añadido. En los códigos figuran como:
+
+Y las variables k0, k1, k2, k3, son las que usaremos para definir thresholds a partir de sus parámetros de entrada análogos.
+Lo siguiente es implementar estos valores en la máquina de estados finitos. Esto lo hemos hecho de la siguiente manera:
+
 
 - Inserte una gráfica en la que se vea con claridad la señal temporal, el etiquetado manual y la detección
   automática conseguida para el fichero grabado al efecto. 
