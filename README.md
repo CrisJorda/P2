@@ -123,10 +123,10 @@ Ejercicios
 Con el objetivo de implementar un detector lo más plural y versátil posible, hemos decidido maximizar la puntuación-F total sobre la base de datos en vez de hacerlo sobre nuestra señal. En consecuencia, el resultado va a diferir bastante, como veremos a continuación.
 
 Los parámetros principales de la trama que son decisivos en la puntuación son:
-- Su potencia en dB
-- Su amplitud media
-- Su zero crossing rate
-- Su duración en milisegundos
+* Su potencia en dB
+* Su amplitud media
+* Su zero crossing rate
+* Su duración en milisegundos
 
 Para maximizarla, tenemos que ir probando distintas combinaciones de estos valores e implementarlas en el programa vad.c de manera correcta.
 
@@ -150,6 +150,40 @@ Vemos que alfa0, alfa1 y alfa2 son offsets que se añaden a la potencia, amplitu
 A continuación, necesitamos automatizar el trabajo. Actualizamos el script run_vad.sh para que pruebe diferentes combinaciones para los parámetros:
 
 <img src="img/run_vad.png" align="center">
+
+Ahora, el script ejecuta tanto vad como el evaluador para diferentes combinaciones de 3 valores (en el primer caso, las tres alfas), y añade el valor de los parámetros y el total de puntuación al fichero “results.txt” para cada uno de los casos. Para un set de valores, quedaría así:
+
+<img src="img/results.png" align="center">
+
+Para el siguiente, se añadiría una línea en blanco y se escribiría en el mismo formato, y así para cada combinación.
+
+A continuación, como el fichero resulta muy largo, escribimos un script en Matlab para encontrar los parámetros óptimos y la eficiencia que suponen.
+
+<img src="img/matlab.png" align="center">
+
+Ejecutando ambos scripts con diferentes valores y configuraciones, vamos ajustándonos poco a poco al máximo. Apuntamos los valores máximos para cada caso:
+
+<img src="img/records1.png" align="center">
+
+Cada columna representa una alfa de la 0 a la 2, y si hay un guión significa que no se ha tenido en cuenta el parámetro (no se ha añadido la condición a la máquina de estados). Cada línea contiene los valores óptimos de la prueba junto con su total correspondiente.
+
+De las 5 primeras líneas sacamos que el zcr es un parámetro malo para estimar los tramos de nuestra database. Esto puede ser debido a que, mientras que la intensidad de la voz y el ruido de cada fichero de audio es muy similar, las frecuencias de la voz son muy diferentes, por tanto, al haber mayor varianza hay una peor estimación.
+
+Decidimos seguir probando con los offsets en la potencia y la amplitud de las tramas, hasta que llega a su máximo (penúltima línea), y por más que ampliemos los valores de búsqueda, el resultado no mejora. En este instante, decidimos modificar el tiempo de cada trama, y para nuestra sorpresa, el resultado mejora en el primer intento. A continuación, decidimos suprimir el parámetro relacionado con el zcr y sustituirlo por el offset añadido a los 10 ms originales de tiempo de la trama. Obtenemos los siguientes resultados:
+
+<img src="img/records2.png" align="center">
+
+Vamos acotando y aumentando la precisión poco a poco para obtener el mejor resultado contemplando decimales, hasta que encontramos el último set de parámetros:
+
+* Offset en de potencia = 8.60 dB
+* Offset en amplitud media = 0.0003950
+* Offset en tiempo de trama = 84 ms
+
+Con lo que obtenemos un resultado de 93.294%. Aún no satisfechos, intentamos añadir el zcr como cuarta variable, pensando que la decisión de sonoridad en función de su valor quizás mejoraría con un tiempo de trama diferente, pero el resultado se sigue alejando mucho del máximo. También por infortunio, usando el vad para nuestra señal de voz con estos mismos parámetros, obtenemos un desastroso 59.125%.
+
+Para finalizar, añadimos estos valores como opciones default del programa vad, de manera que se obtengan los mejores resultados ejecutando el programa sin especificar los parámetros. La máquina de estados finitos sólo considera que, para cambiar de estado, tienen que superar un threshold la potencia y la amplitud media; eliminamos la condición de zcr pero dejamos un valor default de -350.
+
+Analizando este sistema de optimización, habría sido muy interesante hacer una ejecución con los 4 parámetros y un gran abanico de posibles valores, pero el coste computacional habría sido demasiado alto.
 
 - Inserte una gráfica en la que se vea con claridad la señal temporal, el etiquetado manual y la detección
   automática conseguida para el fichero grabado al efecto. 
