@@ -131,13 +131,25 @@ Los parámetros principales de la trama que son decisivos en la puntuación son:
 Para maximizarla, tenemos que ir probando distintas combinaciones de estos valores e implementarlas en el programa vad.c de manera correcta.
 
 Para empezar, creamos las variables dentro de los códigos source y las asociamos a un parámetro de entrada del comando de ejecución de vad, como se nos indica en el anexo I. De esta manera, ofrecemos las siguientes opciones:
+
 <img src="img/vad_help.png" align="center">
 
 Dónde las opciones ‘-0’, ‘-1’, ‘-2’, ‘-3’, son las que hemos añadido. En los códigos figuran como:
 
+<img src="img/vad_h_parameters.png" align="center">
+
 Y las variables k0, k1, k2, k3, son las que usaremos para definir thresholds a partir de sus parámetros de entrada análogos.
 Lo siguiente es implementar estos valores en la máquina de estados finitos. Esto lo hemos hecho de la siguiente manera:
 
+<img src="img/parameters_fsa_1.png" align="center">
+
+<img src="img/parameters_fsa_2.png" align="center">
+
+Vemos que alfa0, alfa1 y alfa2 son offsets que se añaden a la potencia, amplitud media y zcr de la trama, mientras que ftime es un offset que se le añade a la constante FRAME_TIME, definida por defecto como 10 milisegundos. Ahora las longitudes de las tramas tendrán en cuenta la opción elegida por el usuario, y el estado sólo cambiará si se superan los tres thresholds, también modificados desde el terminal.
+
+A continuación, necesitamos automatizar el trabajo. Actualizamos el script run_vad.sh para que pruebe diferentes combinaciones para los parámetros:
+
+<img src="img/run_vad.png" align="center">
 
 - Inserte una gráfica en la que se vea con claridad la señal temporal, el etiquetado manual y la detección
   automática conseguida para el fichero grabado al efecto. 
