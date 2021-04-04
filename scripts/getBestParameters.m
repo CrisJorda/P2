@@ -1,10 +1,6 @@
 % File must be opened with MATLAB, and executed with the program inside the
 % directory \\wsl$\Ubuntu-20.04\home\user\PAV\P2\scripts
 
-clear all
-close all
-clc
-
 alfa0 = 0;
 alfa1 = 0;
 alfa2 = 0;
