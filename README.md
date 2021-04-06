@@ -248,6 +248,8 @@ Si analizamos el fichero obtenido con wavesurfer, vemos que efectivamente, las t
 Si escuchamos el fichero, oímos claramente los tres nombres, y en el resto de tramas calificadas de silencio no se oye absolutamente nada. 
 Por último mostramos una comparativa gráfica de cómo era la señal original versus como ha quedado después de eliminar las tramas silenciosas: 
 
+<img src="img/ceros5.PNG" align="center">
+
 #### Gestión de las opciones del programa usando `docopt_c`
 
 - Si ha usado `docopt_c` para realizar la gestión de las opciones y argumentos del programa `vad`, inserte
