@@ -15,6 +15,8 @@ int main(int argc, char *argv[]) {
   SF_INFO sf_info;
   FILE *vadfile;
   int n_read = 0, i;
+  int n_write = 0; 
+  int cpos; //current pointer position 
 
   VAD_DATA *vad_data;
   VAD_STATE state, last_state;
@@ -27,7 +29,7 @@ int main(int argc, char *argv[]) {
   char	*input_wav, *output_vad, *output_wav;
 
   DocoptArgs args = docopt(argc, argv, /* help */ 1, /* version */ "2.0");
-  float alfa0 = atof(args.alfa0);
+  float alfa0 = atof(args.alfa0); //atof converts a char array into float
   float alfa1 = atof(args.alfa1);
   float alfa2 = atof(args.alfa2);
   float ftime = atof(args.ftime);
@@ -78,10 +80,12 @@ int main(int argc, char *argv[]) {
 
   for (t = last_t = 0; ; t++) { /* For each frame ... */
     /* End loop when file has finished (or there is an error) */
-    if  ((n_read = sf_read_float(sndfile_in, buffer, frame_size)) != frame_size) break;
+    if  ((n_read = sf_read_float(sndfile_in, buffer, frame_size)) != frame_size) break; //returns #items read.
 
     if (sndfile_out != 0) {
       /* TODO: copy all the samples into sndfile_out */
+      //The file write functions write the data in the array pointed to by buffer to the file.
+      if  ((n_write = sf_write_float(sndfile_out, buffer, frame_size)) != frame_size) break; //returns #items written.
     }
 
     state = vad(vad_data, buffer);
@@ -98,6 +102,13 @@ int main(int argc, char *argv[]) {
 
     if (sndfile_out != 0) {
       /* TODO: go back and write zeros in silence segments */
+      if (state == ST_SILENCE){ //if the frame we have read is silence, replace the frame by zeros
+        //first we move back to rewrite the frame, as we want to replace it with zeros
+        if  ((cpos = sf_seek(sndfile_out, (frame_size*-1), SEEK_CUR)) == -1) break;
+        //we will write 0s using the buffer_zeros
+        if  ((n_write = sf_write_float(sndfile_out, buffer_zeros, frame_size)) != frame_size) break; //returns #items written.
+      }
+
     }
   }
 
